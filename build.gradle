@@ -17,101 +17,86 @@
  */
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "6.1.0"
     id "com.github.gmazzo.buildconfig" version "3.0.1"
-    id "org.jetbrains.kotlin.jvm" version "1.6.0"
-    id "maven-publish"
+    id "org.jetbrains.kotlin.jvm" version "1.6.10"
+    id "fabric-loom" version "0.10-SNAPSHOT"
+    id "io.github.juuxel.loom-quiltflower-mini" version "1.1.0"
     id "java"
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-
-allprojects {
-    apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "com.github.gmazzo.buildconfig"
-    apply plugin: "org.jetbrains.kotlin.jvm"
-    apply plugin: "maven-publish"
-    apply plugin: "java"
-
-    version = project_ver
-
-    group = project_group
-
-    configurations {
-        compile
-        api.extendsFrom(compile)
-
-        shade
-        implementation.extendsFrom(shade)
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
+}
 
-    repositories {
-        mavenCentral()
-        maven {
-            url = "https://repo.sk1er.club/repository/maven-public/"
-        }
-        maven {
-            url = "https://repo.spongepowered.org/maven/"
-        }
-        maven {
-            url = "https://jitpack.io/"
-        }
-        maven { url "https://maven.shedaniel.me/" }
-        maven { url "https://maven.terraformersmc.com/releases/" }
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+archivesBaseName = project_name + "-1.18.1"
+version = project_ver
+
+buildConfig {
+    className("WyvtilsInfo")
+    packageName("net.wyvest.wyvtils")
+
+    buildConfigField("String", "NAME", "\"${project_name}\"")
+    buildConfigField("String", "VER", "\"${project_ver}\"")
+    buildConfigField("String", "ID", "\"${project_id}\"")
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/wyvtils.accesswidener")
+    mixin {
+        defaultRefmapName = "mixins.wyvtils.refmap.json"
     }
+}
 
-    jar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        from {
-            'LICENSE'
-        }
-
-        exclude 'META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'module-info.class'
+repositories {
+    mavenCentral()
+    maven {
+        url = "https://repo.sk1er.club/repository/maven-public/"
     }
-
-    shadowJar {
-        archiveClassifier.set('')
-        configurations = [project.configurations.shade]
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-        exclude('LICENSE.md')
-        exclude('pack.mcmeta')
-        exclude('dummyThing')
-        exclude('**/module-info.class')
-        exclude('*.so')
-        exclude('*.dylib')
-        exclude('*.dll')
-        exclude('*.jnilib')
-        exclude('ibxm/**')
-        exclude('com/jcraft/**')
-        exclude('org/lwjgl/**')
-        exclude('net/java/**')
-
-        exclude('META-INF/proguard/**')
-        exclude('META-INF/maven/**')
-        exclude('META-INF/versions/**')
-        exclude('META-INF/com.android.tools/**')
-
-        exclude('**/*.kotlin_metadata')
-        exclude('**/*.kotlin_module')
-        exclude('**/*.kotlin_builtins')
+    maven {
+        url = "https://repo.spongepowered.org/maven/"
     }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId = "${project_name}-${project.name}"
-
-                artifact(shadowJar) {
-                    builtBy shadowJar
-                }
-
-                pom {
-                    name = "${project_name}-${project.name}"
-                }
-            }
-        }
+    maven {
+        url = "https://jitpack.io/"
     }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases/" }
+}
 
-    jar.finalizedBy(shadowJar)
+dependencies {
+    implementation("com.github.Wyvest:keventbus:e8e05ea")
+    minecraft "com.mojang:minecraft:1.18.1"
+    mappings "net.fabricmc:yarn:1.18.1+build.7:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.12.12"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.44.0+1.18"
+    modImplementation("com.terraformersmc:modmenu:3.0.1") {
+        transitive = false
+    }
+    modImplementation("gg.essential:essential-1.18-fabric:1680+release-1.1-phase1")
+    modImplementation include("gg.essential:loader-fabric:1.0.0") {
+        transitive = false
+    }
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.7.1+kotlin.1.6.10")
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+
+    it.options.release = 17
+}
+
+java {
+    withSourcesJar()
 }

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "wyvtils",
+  "version": "${version}",
+  "name": "Wyvtils",
+  "description": "Utilities, for 1.18.",
+  "icon": "assets/wyvtils/wyvtils.png",
+  "authors": [
+    "Wyvest"
+  ],
+  "contact": {
+    "issues": "https://github.com/Wyvest/Wyvtils/issues/",
+    "sources": "https://github.com/Wyvest/Wyvtils/"
+  },
+  "license": "GNU Lesser General Public License version 3 (LGPLv3)",
+  "environment": "client",
+  "accessWidener" : "wyvtils.accesswidener",
+  "entrypoints": {
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "net.wyvest.wyvtils.Wyvtils"
+      }
+    ],
+    "preLaunch": [
+      "gg.essential.loader.stage0.EssentialSetupPreLaunch"
+    ],
+    "modmenu": [
+      "net.wyvest.wyvtils.config.WyvtilsModMenu"
+    ]
+  },
+  "mixins": [
+    "mixins.wyvtils.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.0",
+    "fabric": "*",
+    "fabric-language-kotlin": ">=1.7.0+kotlin.1.6.0",
+    "minecraft": "1.18.x",
+    "java": ">=17",
+    "fabric-key-binding-api-v1": "*"
+  },
+  "recommends": {
+    "modmenu": ">=3.0.0"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://inv.wtf/w-overflow"
+      }
+    }
+  }
+}

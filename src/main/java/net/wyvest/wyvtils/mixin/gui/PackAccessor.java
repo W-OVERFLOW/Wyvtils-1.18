@@ -16,28 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pluginManagement {
-    repositories {
-        maven {
-            name = 'SonaType'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Jitpack'
-            url = 'https://jitpack.io/'
-        }
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
-        gradlePluginPortal()
-        mavenCentral()
-        mavenLocal()
-    }
-}
+package net.wyvest.wyvtils.mixin.gui;
 
-rootProject.name = project_name
+import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
+import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
+
+@Mixin(ResourcePackOrganizer.AbstractPack.class)
+public interface PackAccessor {
+    @Invoker("getDisplayName")
+    Text invokeGetDisplayName();
+}

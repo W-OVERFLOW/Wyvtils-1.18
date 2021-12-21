@@ -16,28 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pluginManagement {
-    repositories {
-        maven {
-            name = 'SonaType'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Jitpack'
-            url = 'https://jitpack.io/'
-        }
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
-        gradlePluginPortal()
-        mavenCentral()
-        mavenLocal()
-    }
-}
+package net.wyvest.wyvtils.mixin.renderer;
 
-rootProject.name = project_name
+import net.minecraft.client.render.WorldRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Mixin(WorldRenderer.class)
+public class WorldRendererMixin {
+
+}

@@ -16,28 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pluginManagement {
-    repositories {
-        maven {
-            name = 'SonaType'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Jitpack'
-            url = 'https://jitpack.io/'
-        }
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
-        gradlePluginPortal()
-        mavenCentral()
-        mavenLocal()
-    }
-}
+package net.wyvest.wyvtils.listener.events
 
-rootProject.name = project_name
+/**
+ * Called when a hitbox is about to be rendered.
+ */
+data class HitboxRenderEvent(
+    val entity: Entity,
+    val distance: Double,
+    var boxColor: Int,
+    var lineOfSightColor: Int,
+    var eyeLineColor: Int,
+    override var cancelled: Boolean = false,
+    var cancelBox: Boolean,
+    var cancelLineOfSight: Boolean,
+    var cancelEyeLine: Boolean
+) : Event()

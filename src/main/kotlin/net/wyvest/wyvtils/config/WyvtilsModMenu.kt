@@ -16,28 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pluginManagement {
-    repositories {
-        maven {
-            name = 'SonaType'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+package net.wyvest.wyvtils.config
+
+import com.terraformersmc.modmenu.api.ConfigScreenFactory
+import com.terraformersmc.modmenu.api.ModMenuApi
+
+/**
+ * Handles integration of the Mod Menu mod.
+ */
+class WyvtilsModMenu : ModMenuApi {
+    override fun getModConfigScreenFactory(): ConfigScreenFactory<*> {
+        return ConfigScreenFactory {
+            WyvtilsConfig.gui()
         }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Jitpack'
-            url = 'https://jitpack.io/'
-        }
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
-        gradlePluginPortal()
-        mavenCentral()
-        mavenLocal()
     }
 }
-
-rootProject.name = project_name
